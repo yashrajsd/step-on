@@ -1,100 +1,175 @@
-import * as React from 'react'
-import { Text, TextInput, Button, View } from 'react-native'
-import { useSignUp } from '@clerk/clerk-expo'
-import { useRouter } from 'expo-router'
+import * as React from 'react';
+import {
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  StyleSheet,
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform,
+} from 'react-native';
+import { useSignUp } from '@clerk/clerk-expo';
+import { useRouter } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import LottieView from 'lottie-react-native';
 
 export default function SignUpScreen() {
-  const { isLoaded, signUp, setActive } = useSignUp()
-  const router = useRouter()
+  const { isLoaded, signUp, setActive } = useSignUp();
+  const router = useRouter();
 
-  const [emailAddress, setEmailAddress] = React.useState('')
-  const [password, setPassword] = React.useState('')
-  const [pendingVerification, setPendingVerification] = React.useState(false)
-  const [code, setCode] = React.useState('')
+  const [emailAddress, setEmailAddress] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [pendingVerification, setPendingVerification] = React.useState(false);
+  const [code, setCode] = React.useState('');
 
-  // Handle submission of sign-up form
   const onSignUpPress = async () => {
-    if (!isLoaded) return
+    if (!isLoaded) return;
 
-    // Start sign-up process using email and password provided
     try {
       await signUp.create({
         emailAddress,
         password,
-      })
+      });
 
-      // Send user an email with verification code
-      await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
+      await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
 
-      // Set 'pendingVerification' to true to display second form
-      // and capture OTP code
-      setPendingVerification(true)
+      setPendingVerification(true);
     } catch (err) {
-      // See https://clerk.com/docs/custom-flows/error-handling
-      // for more info on error handling
-      console.error(JSON.stringify(err, null, 2))
+      console.error(JSON.stringify(err, null, 2));
     }
-  }
+  };
 
-  // Handle submission of verification form
   const onVerifyPress = async () => {
-    if (!isLoaded) return
+    if (!isLoaded) return;
 
     try {
-      // Use the code the user provided to attempt verification
       const signUpAttempt = await signUp.attemptEmailAddressVerification({
         code,
-      })
+      });
 
-      // If verification was completed, set the session to active
-      // and redirect the user
       if (signUpAttempt.status === 'complete') {
-        await setActive({ session: signUpAttempt.createdSessionId })
-        router.replace('/')
+        await setActive({ session: signUpAttempt.createdSessionId });
+        router.replace('/');
       } else {
-        // If the status is not complete, check why. User may need to
-        // complete further steps.
-        console.error(JSON.stringify(signUpAttempt, null, 2))
+        console.error(JSON.stringify(signUpAttempt, null, 2));
       }
     } catch (err) {
-      // See https://clerk.com/docs/custom-flows/error-handling
-      // for more info on error handling
-      console.error(JSON.stringify(err, null, 2))
+      console.error(JSON.stringify(err, null, 2));
     }
-  }
+  };
 
   if (pendingVerification) {
     return (
-      <>
-        <Text>Verify your email</Text>
-        <TextInput
-          value={code}
-          placeholder="Enter your verification code"
-          onChangeText={(code) => setCode(code)}
-        />
-        <Button title="Verify" onPress={onVerifyPress} />
-      </>
-    )
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
+      >
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <View style={{ height: '60%', width: '100%', backgroundColor: '#2A31FF' }}>
+            <LottieView
+              source={require('@/assets/animation/otp.json')}
+              style={{ height: '100%', width: 'auto' }}
+              autoPlay
+              loop
+            />
+          </View>
+          <SafeAreaView style={styles.safearea}>
+            <Text style={{ fontSize: 15 }}>Verify your email</Text>
+            <TextInput
+              value={code}
+              placeholder="Enter your verification code"
+              placeholderTextColor={'#898989'}
+              onChangeText={(code) => setCode(code)}
+              style={styles.input}
+            />
+            <TouchableOpacity style={styles.button} onPress={onVerifyPress}>
+              <Text style={styles.buttonText}>Verify</Text>
+            </TouchableOpacity>
+          </SafeAreaView>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    );
   }
 
   return (
-    <View>
-      <>
-        <Text>Sign up</Text>
-        <TextInput
-          autoCapitalize="none"
-          value={emailAddress}
-          placeholder="Enter email"
-          onChangeText={(email) => setEmailAddress(email)}
-        />
-        <TextInput
-          value={password}
-          placeholder="Enter password"
-          secureTextEntry={true}
-          onChangeText={(password) => setPassword(password)}
-        />
-        <Button title="Continue" onPress={onSignUpPress} />
-      </>
-    </View>
-  )
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
+    >
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <SafeAreaView style={styles.safearea}>
+          <View style={styles.container}>
+            <Text style={{ fontSize: 15, textAlign: 'center' }}>Sign up</Text>
+            <View style={styles.inputWrapper}>
+              <TextInput
+                autoCapitalize="none"
+                value={emailAddress}
+                placeholder="Enter email"
+                style={styles.input}
+                placeholderTextColor={'#000000'}
+                onChangeText={(email) => setEmailAddress(email)}
+              />
+            </View>
+            <View style={styles.inputWrapper}>
+              <TextInput
+                value={password}
+                placeholder="Enter password"
+                secureTextEntry={true}
+                style={styles.input}
+                placeholderTextColor={'#000000'}
+                onChangeText={(password) => setPassword(password)}
+              />
+            </View>
+            <TouchableOpacity style={styles.button} onPress={onSignUpPress}>
+              <Text style={styles.buttonText}>Continue</Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </ScrollView>
+    </KeyboardAvoidingView>
+  );
 }
+
+const styles = StyleSheet.create({
+  inputWrapper: {
+    width: '100%',
+  },
+  input: {
+    borderColor: '#CDCDCD',
+    borderWidth: 1,
+    width: '100%',
+    padding: 15,
+    paddingVertical: 20,
+    borderRadius: 50,
+  },
+  safearea: {
+    paddingHorizontal: 20,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 20,
+  },
+  container: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 20,
+  },
+  button: {
+    backgroundColor: '#131313',
+    padding: 15,
+    paddingVertical: 20,
+    borderRadius: 50,
+    alignItems: 'center',
+    width: '100%',
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+});
