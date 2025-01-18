@@ -1,15 +1,16 @@
-import { SignedIn, SignedOut, useUser } from '@clerk/clerk-expo'
+import Home from '@/components/tabs/home'
+import { SignedIn, SignedOut} from '@clerk/clerk-expo'
 import { Link } from 'expo-router'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function Page() {
-    const { user } = useUser()
+
 
     return (
         <View style={styles.container}>
             <SignedIn>
-                <Text style={styles.welcomeText}>Hello {user?.emailAddresses[0].emailAddress}</Text>
+                <Home/>
             </SignedIn>
             <SignedOut>
                 <View style={styles.imageContainer}>
