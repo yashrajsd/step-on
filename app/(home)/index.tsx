@@ -1,105 +1,97 @@
-import Home from '@/components/tabs/home'
-import { SignedIn, SignedOut} from '@clerk/clerk-expo'
-import { Link } from 'expo-router'
-import { Image, StyleSheet, Text, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { SignedIn, SignedOut, useUser } from '@clerk/clerk-expo';
+import { Link, useRouter } from 'expo-router';
+import LottieView from 'lottie-react-native';
+import { useEffect, useState } from 'react';
+
+import { Dimensions, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
+
+const { height: screenHeight } = Dimensions.get("window");
 
 export default function Page() {
+    const router = useRouter();
+    const { isSignedIn } = useUser();
+    const [isMounted, setIsMounted] = useState(false);
 
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    useEffect(() => {
+        if (isMounted && isSignedIn) {
+            router.replace('/(home)/main');
+        }
+    }, [isMounted, isSignedIn, router]);
+
+    if (!isMounted) {
+        return null;
+    }
 
     return (
         <View style={styles.container}>
-            <SignedIn>
-                <Home/>
-            </SignedIn>
             <SignedOut>
-                <View style={styles.imageContainer}>
-                    <Image
-                        source={require('@/assets/images/robot.png')}
-                        style={styles.image}
-                        resizeMode="cover"
-                    />
-                </View>
-                <SafeAreaView style={styles.safeArea}>
-                    <Text style={styles.logo}>
-                        Step On
-                    </Text>
-                    <Text style={styles.logopara}>
-                        Your AI powered walking assistant by your side
-                    </Text>
-                    <View style={styles.linksContainer}>
-                        <Link href="/(auth)/sign-in">
-                            <View style={styles.linkWrapper}>
-                                <Text style={styles.linkText}>Sign in</Text>
-                            </View>
-                        </Link>
-                        <Link href="/(auth)/sign-up">
-                            <View style={styles.linkWrapper2} >
-                                <Text style={styles.linkText2}>Create Account</Text>
-                            </View>
-                        </Link>
+                <View style={{ flex: 1, justifyContent: 'space-between' }}>
+                    <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: '#FFF', position: 'relative' }}>
+                        <LottieView
+                            loop
+                            autoPlay
+                            source={require('@/assets/animation/user.json')}
+                            style={{ height: 500, margin: 0, position: 'relative', top: 40 }}
+                        />
+                        <LinearGradient
+                            colors={['rgba(26, 70, 86, 0)', 'rgba(26, 70, 86, 1)']}
+                            style={{
+                                position: 'absolute',
+                                height: '100%',
+                                width: '100%',
+                                zIndex: 10,
+                                top: 0,
+                            }}
+                        />
                     </View>
-                </SafeAreaView>
+                    <SafeAreaView style={{ width: '100%' }}>
+                        <View style={{ paddingHorizontal: 20, gap: 10, justifyContent: 'flex-end', alignItems: 'center', width: '100%' }}>
+                            <Text style={{ width: '100%', color: '#FFF', fontWeight: '700', fontSize: 20 }}>
+                                Step On
+                            </Text>
+                            <Text style={{ width: '100%', color: '#FFF', marginBottom: 20 }}>
+                                Your AI powered walking assistant by your side
+                            </Text>
+                            <Pressable
+                                style={{ paddingVertical: 15, borderRadius: 7, backgroundColor: '#FFF', width: '100%' }}
+                                onPress={() => router.push('/(auth)/sign-in')} // Navigate to sign-in
+                            >
+                                <Text style={{ textAlign: 'center', fontWeight: '600' }}>
+                                    Sign In
+                                </Text>
+                            </Pressable>
+                            <TouchableOpacity
+                                style={{ paddingVertical: 15, borderRadius: 7, width: '100%', borderWidth: 1, borderColor: '#2B7691' }}
+                                onPress={() => router.push('/(auth)/sign-up')} // Navigate to sign-up
+                            >
+                                <Text style={{ textAlign: 'center', fontWeight: '600', color: '#FFF' }}>
+                                    Create Account
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </SafeAreaView>
+                </View>
             </SignedOut>
         </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#1A4656',
     },
     safeArea: {
         flex: 1,
         paddingHorizontal: 30,
-        display:'flex',
-        justifyContent:'center'
-    },
-    imageContainer: {
-        maxHeight: '50%',
-        backgroundColor: '#2A31FF',
-        borderBottomLeftRadius: 17,
-        borderBottomRightRadius: 17,
-        overflow: 'hidden',
-    },
-    image: {
-        width: '100%',
-        height: '100%',
-    },
-    linksContainer: {
-        flex: 1,
-        paddingVertical: 20,
-        gap:20
-    },
-    linkWrapper: {
-        borderColor: '#CDCDCD',
-        borderWidth: 1,
-        borderRadius: 50,
-        paddingVertical: 20,
-        width: '100%',
         display: 'flex',
-    }, linkWrapper2: {
-        borderWidth: 1,
-        backgroundColor:'#131313',
-        borderRadius: 50,
-        paddingVertical: 20,
-        width: '100%',
-        display: 'flex',
-    },
-    linkText: {
-        fontSize: 16,
-        textAlign:'center',
-    },
-    linkText2: {
-        fontSize: 16,
-        color: '#ffffff',
-        textAlign:'center'
-    },
-    welcomeText: {
-        fontSize: 18,
-        textAlign: 'center',
-        margin: 16,
+        justifyContent: 'center',
     },
     logo: {
         fontWeight: '700',
@@ -108,4 +100,4 @@ const styles = StyleSheet.create({
     logopara: {
         marginTop: 10,
     },
-})
+});

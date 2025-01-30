@@ -62,12 +62,12 @@ export default function SignUpScreen() {
   if (pendingVerification) {
     return (
       <KeyboardAvoidingView
-        style={{ flex: 1 }}
+        style={{ flex: 1 ,backgroundColor:'#1A4656'}}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
       >
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-          <View style={{ height: '60%', width: '100%', backgroundColor: '#2A31FF' }}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1}}>
+          <View style={{ height: '60%', width: '100%',backgroundColor: "#6956FF",}}>
             <LottieView
               source={require('@/assets/animation/otp.json')}
               style={{ height: '100%', width: 'auto' }}
@@ -75,8 +75,11 @@ export default function SignUpScreen() {
               loop
             />
           </View>
-          <SafeAreaView style={styles.safearea}>
-            <Text style={{ fontSize: 15 }}>Verify your email</Text>
+          <SafeAreaView style={[styles.safearea,{gap:20,alignItems:'center'}]}>
+            <View style={{width:'100%'}}>
+            <Text style={{ fontSize: 18,color:'#FFF',fontWeight:'600',textAlign:'left',width:'100%'}}>Verify your email</Text>
+            {/* <Text style={{color:'#FFF',opacity:0.7,marginTop:2}}>One time password was sent to your gmail</Text> */}
+            </View>
             <TextInput
               value={code}
               placeholder="Enter your verification code"
@@ -84,8 +87,8 @@ export default function SignUpScreen() {
               onChangeText={(code) => setCode(code)}
               style={styles.input}
             />
-            <TouchableOpacity style={styles.button} onPress={onVerifyPress}>
-              <Text style={styles.buttonText}>Verify</Text>
+            <TouchableOpacity style={{backgroundColor:'#545AFF',width:'100%',padding:15,borderRadius:7,borderBottomWidth:4,borderBottomColor:'#444ADA'}} onPress={onVerifyPress}>
+              <Text style={[{color:'#FFF',textAlign:'center',fontWeight:'600'}]}>Verify</Text>
             </TouchableOpacity>
           </SafeAreaView>
         </ScrollView>
@@ -95,21 +98,22 @@ export default function SignUpScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
+      style={{ flex: 1 ,backgroundColor:'#1A4656'}}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
     >
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1}}>
         <SafeAreaView style={styles.safearea}>
-          <View style={styles.container}>
-            <Text style={{ fontSize: 15, textAlign: 'center' }}>Sign up</Text>
+          <View style={[styles.container,{justifyContent:'space-between',flex:1}]}>
+            <View style={[styles.container,{marginTop:20}]}>
+            <Text style={{ fontSize: 15, textAlign: 'left',width:'100%',fontWeight:'700',color:'#FFF'}}>Sign up</Text>
             <View style={styles.inputWrapper}>
               <TextInput
                 autoCapitalize="none"
                 value={emailAddress}
                 placeholder="Enter email"
                 style={styles.input}
-                placeholderTextColor={'#000000'}
+                placeholderTextColor={'#FFF'}
                 onChangeText={(email) => setEmailAddress(email)}
               />
             </View>
@@ -119,13 +123,19 @@ export default function SignUpScreen() {
                 placeholder="Enter password"
                 secureTextEntry={true}
                 style={styles.input}
-                placeholderTextColor={'#000000'}
+                placeholderTextColor={'#FFFF'}
                 onChangeText={(password) => setPassword(password)}
               />
             </View>
+            </View>
+            <View style={{width:'100%',gap:20}}>
             <TouchableOpacity style={styles.button} onPress={onSignUpPress}>
               <Text style={styles.buttonText}>Continue</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={[styles.button,{borderColor: '#2B7691',backgroundColor:'none',borderWidth:1}]} onPress={()=>{router.back()}}>
+              <Text style={[styles.buttonText,{color:'#2B7691'}]}>Sign In</Text>
+            </TouchableOpacity>
+            </View>
           </View>
         </SafeAreaView>
       </ScrollView>
@@ -138,23 +148,20 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   input: {
-    borderColor: '#CDCDCD',
-    borderWidth: 1,
     width: '100%',
     padding: 15,
     paddingVertical: 20,
-    borderRadius: 50,
+    borderRadius: 7,
+    fontWeight:'600',
+    color:'#FFF',
+    backgroundColor:'#1D5367',
   },
   safearea: {
     paddingHorizontal: 20,
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 20,
   },
   container: {
     width: '100%',
-    justifyContent: 'center',
     alignItems: 'center',
     gap: 20,
   },

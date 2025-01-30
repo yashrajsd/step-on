@@ -41,107 +41,117 @@ export default function Page() {
   }, [isLoaded, emailAddress, password])
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.animatedContainer}>
-      <View style={styles.animatedView}>
+    <View style={{flex:1,backgroundColor:'#1A4656'}}>
+      <SafeAreaView style={styles.safeArea}>
+        <View>
+        <View style={styles.animatedContainer}>
+          {/* <View style={styles.animatedView}>
         <LottieView
         source={require('@/assets/animation/hi2.json')}
         style={styles.lottie}
           autoPlay
           loop
         />
-      </View>
-      <View style={{display:'flex',justifyContent:'center'}}>
-      <Text style={{fontWeight:'700'}}>
-        Welcome Back again!
-      </Text>
-      <Text style={{fontSize:12}}>
-        Get started with existing account
-      </Text>
-      </View>
-      </View>
-      <TextInput
-        autoCapitalize="none"
-        value={emailAddress}
-        placeholder="Enter email"
-        placeholderTextColor="#A9A9A9" 
-        onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
-        style={styles.input}
-      />
-      <TextInput
-        value={password}
-        placeholder="Enter password"
-        placeholderTextColor="#A9A9A9" 
-        secureTextEntry={true}
-        onChangeText={(password) => setPassword(password)}
-        style={styles.input}
-      />
-      {/* Custom styled button */}
-      <TouchableOpacity style={styles.button} onPress={onSignInPress}>
-        <Text style={styles.buttonText}>Sign in</Text>
-      </TouchableOpacity>
-      <View style={styles.signUpContainer}>
-        <Text>Don't have an account?</Text>
-        <Link href="/sign-up">
-          <Text>Sign up</Text>
-        </Link>
-      </View>
-    </SafeAreaView>
+      </View> */}
+          <View style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+            <Text style={{ fontWeight: '700', textAlign: 'left',color:'white',fontSize:22,width:'100%'}}>
+              Welcome Back again!
+            </Text>
+            <Text style={{ fontSize: 12, textAlign: 'left',color:'#95C7D9',marginTop:5 }}>
+              Get started with existing account
+            </Text>
+          </View>
+        </View>
+        <TextInput
+          autoCapitalize="none"
+          value={emailAddress}
+          placeholder="Enter email"
+          placeholderTextColor="#FFF"
+          onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
+          style={styles.input}
+        />
+        <TextInput
+          value={password}
+          placeholder="Enter password"
+          placeholderTextColor="#FFF"
+          secureTextEntry={true}
+          onChangeText={(password) => setPassword(password)}
+          style={styles.input}
+        />
+        </View>
+        {/* Custom styled button */}
+        <View>
+        <TouchableOpacity style={styles.button} onPress={onSignInPress}>
+          <Text style={styles.buttonText}>Sign in</Text>
+        </TouchableOpacity>
+        <View style={styles.signUpContainer}>
+          <Text style={{color:'#FFF'}}>Don't have an account?</Text>
+          <Link href="/sign-up">
+            <Text style={{color:'#FFF',fontWeight:'500'}}>Sign up</Text>
+          </Link>
+        </View>
+        </View>
+      </SafeAreaView>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
-  animatedContainer:{
-    display:'flex',
-    flexDirection:'row',
-    gap:10,
-    alignItems:'center',
-    marginBottom:20
+  animatedContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 10,
+    alignItems: 'center',
+    marginBottom: 20
   },
-  animatedView:{
-    overflow:'hidden',
-    height:55,
-    width:55,
-    backgroundColor:'#131313',
-    marginBottom:10,
-    borderRadius:50
+  animatedView: {
+    overflow: 'hidden',
+    height: 55,
+    width: 55,
+    backgroundColor: '#131313',
+    marginBottom: 10,
+    borderRadius: 50
   },
-  safeArea:{
-    display:'flex',
-    paddingHorizontal:20,
-    justifyContent:'center',
-    flex:1
+  safeArea: {
+    display: 'flex',
+    paddingHorizontal: 20,
+    justifyContent:'space-between',
+    flex: 1,
+    marginBottom:20,
+    marginTop:20
   },
-  lottie:{
-    width:'100%',
-    height:'100%',
-    color:'#ffffff'
+  lottie: {
+    width: '100%',
+    height: '100%',
+    color: '#ffffff'
   },
   input: {
-    borderColor: '#CDCDCD',
-    color: '#000000',
-    borderRadius: 50,
+    color: '#FFF',
+    fontWeight:'600',
+    borderRadius: 7,
     marginVertical: 5,
-    borderWidth: 1,
     padding: 10,
+    backgroundColor:'#1D5367',
     paddingVertical: 20,
   },
   button: {
-    backgroundColor: '#131313',
-    borderRadius: 50,
+    backgroundColor: '#FFF',
+    borderRadius:7,
     paddingVertical: 20,
     marginVertical: 10,
     alignItems: 'center',
   },
   buttonText: {
-    color: '#ffffff',
+    color: '#131313',
     fontSize: 16,
+    fontWeight:'600'
   },
-  signUpContainer:{
-    display:'flex',
-    justifyContent:'center',
-    alignItems:'center',
-    flexDirection:'row',
-    gap:10,
+  signUpContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 10,
+    marginTop:10
   }
 })
